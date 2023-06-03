@@ -26,7 +26,7 @@ public class AddCommand : ICommand
     {
         var workingDirectory = Environment.CurrentDirectory;
         var vcsRootDirectory = _fileSystemService.GetVcsRootDirectory();
-        var indexFile = _fileSystemService.GetVcsIndexFilePath();
+        var indexFile = vcsRootDirectory.IndexPath;
         var itemFullName = workingDirectory + '/' + parameters[0];
         
         if (File.Exists(itemFullName))
@@ -43,7 +43,7 @@ public class AddCommand : ICommand
 
     private void StageDirectory(string itemFullName)
     {
-        string[] childs = Directory.GetFileSystemEntries(itemFullName);
+        var childs = Directory.GetFileSystemEntries(itemFullName);
         foreach (var child in childs)
         {
             if (Directory.Exists(child))

@@ -1,4 +1,1 @@
-﻿using YetAnotherVersionControlSystem.Commands;
-
-var command = new InitCommand();
-command.Execute();
+﻿Console.WriteLine("Hello, World!");

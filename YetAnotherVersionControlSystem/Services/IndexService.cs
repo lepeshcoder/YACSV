@@ -36,21 +36,22 @@ public class IndexService : IIndexService
 
     public void DeleteFromIndex(string objectHash)
     {
-        var records = new List<string>(File.ReadAllLines(_fileSystemService.GetVcsIndexFilePath()));
+        var rootDirectory = _fileSystemService.GetVcsRootDirectory();
+        var records = new List<string>(File.ReadAllLines(_fileSystemService.GetVcsRootDirectory().IndexPath));
         foreach (var record in records)
         {
-            string[] parts = record.Split(' ');
-            string hash = parts[0];
+            var parts = record.Split(' ');
+            var hash = parts[0];
             if (hash == objectHash)
             {
                 records.Remove(record);
             }
         } 
-        File.WriteAllLines(_fileSystemService.GetVcsIndexFilePath(),records);
+        File.WriteAllLines(_fileSystemService.GetVcsRootDirectory().IndexPath,records);
     }
 
     public void ClearIndex()
     {
-        File.WriteAllText(_fileSystemService.GetVcsIndexFilePath(),"");
+        File.WriteAllText(_fileSystemService.GetVcsRootDirectory().IndexPath,"");
     }
 }

@@ -1,7 +1,6 @@
-﻿using YetAnotherVersionControlSystem.Constants;
-using YetAnotherVersionControlSystem.Contracts;
+﻿using YetAnotherVersionControlSystem.Contracts;
 using YetAnotherVersionControlSystem.Exceptions;
-using YetAnotherVersionControlSystem.Services;
+using YetAnotherVersionControlSystem.Models;
 
 namespace YetAnotherVersionControlSystem.Commands;
 
@@ -20,30 +19,30 @@ public class InitCommand : ICommand
     
     public void Execute(params string[] parameters)
     {
-        var vcsRootDirectory = Environment.CurrentDirectory;
-        if (Directory.Exists(vcsRootDirectory))
+        var vcsRootDirectory = new VcsRootDirectory(Environment.CurrentDirectory);
+        if (Directory.Exists(vcsRootDirectory.FullName))
         {
             throw new InvalidInputException("Repository already exists");
         }
 
         //Create root directory
-        var directoryInfo = Directory.CreateDirectory(vcsRootDirectory);
+        var directoryInfo = Directory.CreateDirectory(vcsRootDirectory.FullName);
         directoryInfo.Attributes |= FileAttributes.Hidden;
         
         // Create index file
-        var indexFile = _fileSystemService.GetVcsIndexFilePath();
+        var indexFile = vcsRootDirectory.IndexPath;
         File.Create(indexFile);
 
         // Create head file
-        var headFile = _fileSystemService.GetVcsHeadFilePath();
+        var headFile = vcsRootDirectory.HeadPath;
         File.Create(headFile);
         
         // Create Objects directory
-        var objectsDirectory = _fileSystemService.GetVcsObjectsDirectory();
+        var objectsDirectory = vcsRootDirectory.ObjectsPath;
         Directory.CreateDirectory(objectsDirectory);
        
         // Create Refs Directory 
-        var refsDirectory = _fileSystemService.GetVcsRefsDirectory();
+        var refsDirectory = vcsRootDirectory.RefsPath;
         Directory.CreateDirectory(refsDirectory);
         
 
