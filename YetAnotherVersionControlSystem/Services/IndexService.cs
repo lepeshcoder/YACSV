@@ -1,57 +1,52 @@
 ﻿using YetAnotherVersionControlSystem.Contracts;
+using YetAnotherVersionControlSystem.Models;
 
 namespace YetAnotherVersionControlSystem.Services;
 
 public class IndexService : IIndexService
 {
+
+    private readonly List<IndexRecord> _indexRecords = new();
     
-    //TODO вынести парсер индекса в отдельный класс, сделать методы для получения коллекции хэшей и путей
     private readonly IFileSystemService _fileSystemService;
 
     public IndexService(IFileSystemService fileSystemService)
     {
         _fileSystemService = fileSystemService;
+        var indexPath = _fileSystemService.GetVcsRootDirectory().IndexPath;
+        var records = File.ReadAllLines(indexPath);
+        foreach (var record in records)
+        {
+            _indexRecords.Add(new IndexRecord(record));
+        }
     }
 
-    public string GetHashByPath(string path)
+    public string? GetHashByPath(string path)
     {
-        throw new NotImplementedException();
+        return _indexRecords.Where(record => record.Path == path).Select(record => record.Hash).FirstOrDefault();
     }
 
-    public string? GetPathByHash(string hash)
+    public List<string> GetPathByHash(string hash)
     {
-        throw new NotImplementedException();
+        return (from record in _indexRecords where record.Hash == hash select record.Path).ToList();
     }
 
     public void WriteToIndex(string objectHash, string objectPath)
     {
-        using StreamWriter writer = File.AppendText(objectPath);
-        writer.WriteLine(objectHash + " " + objectPath);
+        var newRecord = new IndexRecord(objectHash, objectPath);
+        _indexRecords.Add(newRecord);
+        using var writer = File.AppendText(objectPath);
+        writer.WriteLine(newRecord);
     }
-
-    public bool IsInIndex(string objectHash, string objectPath)
+    
+    public void DeleteFromIndexByPath(string objectPath)
     {
-        throw new NotImplementedException();
-    }
-
-    public void DeleteFromIndex(string objectHash)
-    {
-        var rootDirectory = _fileSystemService.GetVcsRootDirectory();
-        var records = new List<string>(File.ReadAllLines(_fileSystemService.GetVcsRootDirectory().IndexPath));
-        foreach (var record in records)
+        foreach (var record in _indexRecords.Where(record => record.Path == objectPath))
         {
-            var parts = record.Split(' ');
-            var hash = parts[0];
-            if (hash == objectHash)
-            {
-                records.Remove(record);
-            }
-        } 
-        File.WriteAllLines(_fileSystemService.GetVcsRootDirectory().IndexPath,records);
+            _indexRecords.Remove(record);
+        }
+        var toWrite = _indexRecords.Select(record => record.ToString()).ToList();
+        File.WriteAllLines(_fileSystemService.GetVcsRootDirectory().IndexPath,toWrite);
     }
-
-    public void ClearIndex()
-    {
-        File.WriteAllText(_fileSystemService.GetVcsRootDirectory().IndexPath,"");
-    }
+    
 }
