@@ -43,14 +43,13 @@ public class AddCommand : ICommand
         {
             throw new Exception("Unknown File Entry");
         }
-       
     }
     
     public void Execute(params string[] parameters)
     {
         var workingDirectory = Environment.CurrentDirectory;
         var itemFullName = workingDirectory + '/' + parameters[0];
-
+        
         if (File.Exists(itemFullName))
         {
             StageFile(itemFullName);
@@ -59,8 +58,10 @@ public class AddCommand : ICommand
         {
             StageDirectory(itemFullName);
         }
-        else throw new Exception("not a File or Directory");
-
+        else
+        {
+            throw new Exception("not a File or Directory");
+        }
     }
 
    

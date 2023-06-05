@@ -13,7 +13,7 @@ public class VcsRootDirectory
     private static string Objects => "objects";
     private static string Blobs => "blobs";
     private static string Refs => "refs";
-    
+
     public string Path { get; }
     public string FullName => Path + '/' + Name;
     public string IndexPath => FullName + '/' + Index;
