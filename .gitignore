@@ -17,6 +17,7 @@ x64/
 
 .vs/
 .idea/
+*.sln
 *_i.c
 *_p.c
 *_i.h
