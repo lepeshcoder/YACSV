@@ -4,7 +4,8 @@ namespace YetAnotherVersionControlSystem.Commands;
 
 public class StatusCommand : ICommand
 {
-    public string Description { get; set; }
+    public string Description { get; set; } = "";
+    
     public void Execute(params string[] parameters)
     {
         throw new NotImplementedException();

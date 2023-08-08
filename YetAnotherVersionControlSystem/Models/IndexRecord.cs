@@ -2,6 +2,9 @@
 
 public class IndexRecord
 {
+    public string Hash { get; set; }
+    public string Path { get; set; }
+    
     public IndexRecord(string indexRecordString)
     {
         var parts = indexRecordString.Split(' ');
@@ -15,11 +18,5 @@ public class IndexRecord
         Path = path;
     }
     
-    public string Hash { get; set; }
-    public string Path { get; set; }
-    
-    public override string ToString()
-    {
-        return Hash + " " + Path;
-    }
+    public override string ToString() => Hash + " " + Path;
 }

@@ -5,9 +5,7 @@ namespace YetAnotherVersionControlSystem.Services;
 
 public class IndexService : IIndexService
 {
-
     private readonly List<IndexRecord> _indexRecords = new();
-    
     private readonly IFileSystemService _fileSystemService;
 
     public IndexService(IFileSystemService fileSystemService)
@@ -21,7 +19,7 @@ public class IndexService : IIndexService
         }
     }
 
-    public string? GetHashByPath(string path)
+    public string GetHashByPath(string path)
     {
         return _indexRecords.Where(record => record.Path == path).Select(record => record.Hash).FirstOrDefault();
     }
@@ -48,5 +46,4 @@ public class IndexService : IIndexService
         var toWrite = _indexRecords.Select(record => record.ToString()).ToList();
         File.WriteAllLines(_fileSystemService.GetVcsRootDirectory().IndexPath,toWrite);
     }
-    
 }

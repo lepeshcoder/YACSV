@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 using YetAnotherVersionControlSystem.Contracts;
+using YetAnotherVersionControlSystem.Models;
 
 namespace YetAnotherVersionControlSystem.Services;
 
@@ -11,4 +13,5 @@ public class HashService : IHashService
         var hexString = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         return hexString;
     }
+
 }

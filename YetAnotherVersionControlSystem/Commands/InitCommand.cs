@@ -8,24 +8,20 @@ public class InitCommand : ICommand
 {
     private readonly IFileSystemService _fileSystemService;
 
+    public string Description { get; set; } = "";
+
     public InitCommand(IFileSystemService fileSystemService)
     {
         _fileSystemService = fileSystemService;
     }
-
-    //TODO
-    //Write a description for the command
-    public string Description { get; set; }
     
     public void Execute(params string[] parameters)
     {
         var vcsRootDirectory = new VcsRootDirectory(Environment.CurrentDirectory);
         if (Directory.Exists(vcsRootDirectory.FullName))
-        {
             throw new InvalidInputException("Repository already exists");
-        }
 
-        //Create root directory
+        // Create root directory
         var directoryInfo = Directory.CreateDirectory(vcsRootDirectory.FullName);
         directoryInfo.Attributes |= FileAttributes.Hidden;
         
@@ -45,8 +41,7 @@ public class InitCommand : ICommand
         var refsDirectory = vcsRootDirectory.RefsPath;
         Directory.CreateDirectory(refsDirectory);
         
-
-        //TODO
-        //Create config file storing as JSON
+        // TODO
+        // Create config file storing as JSON
     }
 }

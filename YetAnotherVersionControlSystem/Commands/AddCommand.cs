@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using YetAnotherVersionControlSystem.Contracts;
-using YetAnotherVersionControlSystem.Services;
+﻿using YetAnotherVersionControlSystem.Contracts;
 
 namespace YetAnotherVersionControlSystem.Commands;
 
@@ -11,6 +9,8 @@ public class AddCommand : ICommand
     private readonly IFileSystemService _fileSystemService;
     private readonly IHashService _hashService;
 
+    public string Description { get; set; } = "";
+
     public AddCommand(IBlobService blobService, IIndexService indexService, 
         IFileSystemService fileSystemService, IHashService hashService)
     {
@@ -20,30 +20,8 @@ public class AddCommand : ICommand
         _hashService = hashService;
     }
 
-    public string Description { get; set; } = "";
-
-    //TODO попробуй сделать ParallelExecute
-    public void ParallelExecute(params string[] parameters)
-    {
-        var workingDirectory = Environment.CurrentDirectory;
-        var itemFullName = workingDirectory + '/' + parameters[0];
-        if (Directory.Exists(itemFullName))
-        {
-            var paths = new Queue<string>(Directory.GetFileSystemEntries(itemFullName));
-            while (paths.Count != 0)
-            {
-                var currPath = paths.Dequeue();
-            }
-        }
-        else if (File.Exists(itemFullName))
-        {
-            StageFile(itemFullName);
-        }
-        else
-        {
-            throw new Exception("Unknown File Entry");
-        }
-    }
+    // TODO try to make ParallelExecute
+  
     
     public void Execute(params string[] parameters)
     {
